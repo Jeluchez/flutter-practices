@@ -1,10 +1,8 @@
 // ignore: non_constant_identifier_names
-class Usuario{
-
-  String? nombre;
+class Usuario {
+  String nombre;
   int? edad;
   List<String>? profesiones;
 
-  Usuario({this.nombre, this.edad, this.profesiones})
-
+  Usuario({required this.nombre, this.edad, this.profesiones});
 }
