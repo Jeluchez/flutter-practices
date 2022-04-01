@@ -1,10 +1,16 @@
 // ignore: non_constant_identifier_names
-class Usuario{
+class Usuario {
+  final String? nombre;
+  final int? edad;
+  final List<String>? profesiones;
 
-  String? nombre;
-  int? edad;
-  List<String>? profesiones;
+  Usuario({this.nombre, this.edad, this.profesiones});
 
-  Usuario({this.nombre, this.edad, this.profesiones})
-
+  Usuario copyWith({String? nombre, int? edad, List<String>? profesiones}) {
+    return Usuario(
+      nombre: nombre ?? this.nombre,
+      edad: edad ?? this.edad,
+      profesiones: profesiones ?? this.profesiones,
+    );
+  }
 }
