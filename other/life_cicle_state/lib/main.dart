@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:life_cicle_state/cycle_timer.dart';
 
@@ -38,6 +40,7 @@ class _WidgetBindingsObserverSampleState
 
   late DateTime? _startTime, _endTime;
   final List<CycleTimer> cycleTimerList = [];
+  late String _totalDuration = '';
 
   String getFacetecProcessDuration() {
     Duration pacialDuration = const Duration(seconds: 0);
@@ -60,7 +63,8 @@ class _WidgetBindingsObserverSampleState
       pacialDuration += currentCT.start!.difference(beforeCT.end!);
     }
 
-    totalDuration += _startTime!.difference(cycleTimerList.last.end!);
+    totalDuration =
+        pacialDuration + _endTime!.difference(cycleTimerList.last.end!);
 
     return totalDuration.toString();
   }
@@ -71,20 +75,25 @@ class _WidgetBindingsObserverSampleState
     if (state == AppLifecycleState.paused) {
       cycleTimer.start = DateTime.now();
       cycleTimerList.add(cycleTimer);
+      log('******cycle: ${cycleTimerList.length} ******');
+      log('Paused: ${cycleTimer.start}');
     }
     if (state == AppLifecycleState.resumed) {
       cycleTimerList.last.end = DateTime.now();
+      log('Resumed: ${cycleTimerList.last.end}');
     }
   }
 
   onStart() {
     _startTime = DateTime.now();
+    log('Start Duration: $_startTime');
   }
 
   onEnd() {
     _endTime = DateTime.now();
-
-    getFacetecProcessDuration();
+    log('end duration: $_endTime');
+    _totalDuration = getFacetecProcessDuration();
+    setState(() {});
   }
 
   @override
@@ -95,17 +104,28 @@ class _WidgetBindingsObserverSampleState
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ElevatedButton(
-          onPressed: onStart(),
-          child: Text('Start'),
-        ),
-        ElevatedButton(
-          onPressed: onStart(),
-          child: Text('End'),
-        )
-      ],
+    return Center(
+      child: Column(
+        children: [
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Total duration:'),
+                Text(_totalDuration),
+              ],
+            ),
+          ),
+          ElevatedButton(
+            onPressed: onStart,
+            child: Text('Start'),
+          ),
+          ElevatedButton(
+            onPressed: onEnd,
+            child: Text('End'),
+          )
+        ],
+      ),
     );
   }
 }
